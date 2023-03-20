@@ -1,0 +1,20 @@
+{
+  "name": "labecommerce-backend",
+  "version": "1.0.0",
+  "description": "\"e-commerce API\"",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mibaratto/labecommerce-backend.git"
+  },
+  "author": "\"Michelle-Lang_Baratto\"",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mibaratto/labecommerce-backend/issues"
+  },
+  "homepage": "https://github.com/mibaratto/labecommerce-backend#readme"
+}
