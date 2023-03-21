@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/mibaratto/labecommerce-backend/issues"
   },
-  "homepage": "https://github.com/mibaratto/labecommerce-backend#readme"
+  "homepage": "https://github.com/mibaratto/labecommerce-backend#readme",
+  "devDependencies": {
+    "@types/node": "^18.15.5"
+  }
 }
