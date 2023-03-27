@@ -1,4 +1,4 @@
-import { TProduct, TPurchase, TUser } from "./types";
+import { TProduct, TPurchase, TUser, PRODUCT_CATEGORIES } from "./types";
 
  
  export const users: TUser[] = [
@@ -23,15 +23,21 @@ import { TProduct, TPurchase, TUser } from "./types";
  export const products: TProduct[] = [
     {
         id: "1001",
-        name: "cadeira",
+        name: "bolsa",
         price: 100.00,
-        category: "móveis"
+        category: PRODUCT_CATEGORIES.ACCESSORIES
     },
     {
         id: "1002",
         name: "aspirador-de-pó",
         price: 50.00,
-        category: "eletrodomésticos"
+        category: PRODUCT_CATEGORIES.ELECTRONICS
+    },
+    {
+        id: "1003",
+        name: "camisa",
+        price: 50.00,
+        category: PRODUCT_CATEGORIES.CLOTHES_AND_SHOES
     }
  ]
 
@@ -50,5 +56,47 @@ import { TProduct, TPurchase, TUser } from "./types";
     }
  ]
 
+export function createUser(id:string, email:string, password:string):string {
+     const newUser = {
+        id,
+        email,
+        password,
+     }
+    users.push(newUser)
+    return "Usuário cadastrado com sucesso!"
+}
 
- 
+export function getAllUsers():TUser[] {
+    return users
+}
+
+export function createProduct(id:string, name:string, price:number, category:PRODUCT_CATEGORIES):string {
+    const newProduct = {
+    id,
+    name,
+    price,
+    category
+    }
+    return "Produto criado com sucesso!"
+}
+
+export function getAllProducts():TProduct[] {
+    return products
+}
+
+
+export function getProductById(idToSearch:string): TProduct | undefined {
+    const productSelected = products.find((product) => product.id === idToSearch)
+
+    return productSelected
+}
+
+export function queryProductByName(query:string): TProduct[] | undefined {
+
+    const protuctSearched = products.filter(product => query === ''|| product.name.toLowerCase().includes(query.toLowerCase()))
+    return protuctSearched
+
+}
+
+
+// .filter(product => searchFilter === "" || product.name.toLowerCase().includes(searchFilter.toLowerCase()))
