@@ -27,10 +27,33 @@ app.get("/products", (req: Request, res: Response) => {
 
 app.get("/product/search", (req: Request, res: Response) => {
     const busca = req.query.q as string
-
+    //const {q} = req.query
     res.status(200)
     res.send(queryProductByName(busca))
 })
+
+app.post("/users", (req: Request, res: Response) => {
+    const {id, email, password} = req.body
+    if (typeof id !== "string") {
+        return res.status(400).send("id tem que ser string")
+    }
+
+    const newUser = createUser(id, email, password)
+
+    res.status(200)
+    res.send(newUser)
+})
+
+// export function createUser(id:string, email:string, password:string):string {
+//     const newUser = {
+//        id,
+//        email,
+//        password,
+//     }
+//    users.push(newUser)
+//    return "Usuário cadastrado com sucesso!"
+// }
+
 
 // console.log("Usuarios", users, "Produtos", products, "Compras", purchases)
 
