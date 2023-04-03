@@ -56,14 +56,14 @@ import { TProduct, TPurchase, TUser, PRODUCT_CATEGORIES } from "./types";
     }
  ]
 
-export function createUser(id:string, email:string, password:string):string {
-     const newUser = {
+export function createUser(id:string, email:string, password:string):TUser {
+     const newUser: TUser = {
         id,
         email,
         password,
      }
     users.push(newUser)
-    return "Usuário cadastrado com sucesso!"
+    return newUser
 }
 
 export function getAllUsers():TUser[] {
