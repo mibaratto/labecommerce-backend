@@ -63,3 +63,16 @@ UPDATE users
 UPDATE products
     SET price = 200
     WHERE id = "p005";
+
+
+SELECT * FROM users
+    ORDER BY email ASC;
+
+SELECT * FROM products    
+    ORDER BY price ASC
+    LIMIT 2;
+
+
+SELECT * FROM products   
+    WHERE price >= 100 AND price <= 300
+    ORDER BY price ASC;
