@@ -38,3 +38,4 @@ VALUES
     ("p003","aspirador", 300, "eletrodomésticos"),
     ("p004","sofá", 2.500, "móveis"),
     ("p005","quadro", 150, "decoração");
+
