@@ -39,3 +39,27 @@ VALUES
     ("p004","sofá", 2.500, "móveis"),
     ("p005","quadro", 150, "decoração");
 
+
+SELECT * FROM products WHERE name = "aspirador";
+
+
+INSERT INTO users (id, email, password)
+    VALUES ("004", "zizi@gmail.com", "321123");
+
+INSERT INTO products(id, name, price, category)
+    VALUES ("p006", "lâmpada", 1.5, "iluminação");
+
+
+SELECT * FROM products WHERE id = "p006";
+
+DELETE FROM users where id = "004";
+
+DELETE FROM products where id = "p006";
+
+UPDATE users
+    SET email = "pedro@gmail.com"
+    WHERE id = "003" ;
+
+UPDATE products
+    SET price = 200
+    WHERE id = "p005";
