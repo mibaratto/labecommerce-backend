@@ -14,9 +14,9 @@ DROP TABLE users;
 
 INSERT INTO users (id, email, password)
 VALUES
-    ("001", "maria@email.com", "maria123"),
-    ("002", "joana@email.com", "joana123"),
-    ("003", "pedro@email.com", "pedro123");
+    ("u001", "maria@email.com", "maria123"),
+    ("u002", "joana@email.com", "joana123"),
+    ("u003", "pedro@email.com", "pedro123");
 
 -----------TABELA PRODUTOS
 
@@ -44,7 +44,7 @@ SELECT * FROM products WHERE name = "aspirador";
 
 
 INSERT INTO users (id, email, password)
-    VALUES ("004", "zizi@gmail.com", "321123");
+    VALUES ("u004", "zizi@gmail.com", "321123");
 
 INSERT INTO products(id, name, price, category)
     VALUES ("p006", "lâmpada", 1.5, "iluminação");
@@ -76,3 +76,33 @@ SELECT * FROM products
 SELECT * FROM products   
     WHERE price >= 100 AND price <= 300
     ORDER BY price ASC;
+
+CREATE TABLE purchases (
+    id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    total_price REAL NOT NULL,
+    paid INTEGER NOT NULL DEFAULT 0,
+    delivered_at TEXT DEFAULT NULL,
+    buyer_id TEXT NOT NULL,
+    FOREIGN KEY (buyer_id) REFERENCES users(id)
+);
+
+INSERT INTO purchases (id, total_price, buyer_id)
+ VALUES
+    ("pu001",  234.00, "u001" ),
+    ("pu002",  38.00,"u001" ),
+    ("pu003",  12.50, "u002" ),
+    ("pu004",  120.80, "u002" );
+
+SELECT * FROM purchases;
+
+DROP TABLE purchases;
+
+UPDATE purchases
+    SET delivered_at = DATETIME("now")
+    WHERE id = "pu001";
+
+
+SELECT * FROM purchases
+INNER JOIN users
+ON buyer_id = users.id
+WHERE users.id = "u001";
