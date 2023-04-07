@@ -1,4 +1,4 @@
--- Active: 1680538089515@@127.0.0.1@3306
+-- Active: 1680783061143@@127.0.0.1@3306
 
 -----------TABELA USUÁRIOS
 
@@ -106,3 +106,23 @@ SELECT * FROM purchases
 INNER JOIN users
 ON buyer_id = users.id
 WHERE users.id = "u001";
+
+
+CREATE TABLE purchases_products (
+    purchase_id TEXT NOT NULL,
+    product_id TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    FOREIGN KEY (purchase_id) REFERENCES purchases(id)
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+SELECT * FROM purchases_products;
+
+INSERT INTO purchases_products (purchase_id, product_id, quantity)
+ VALUES
+    ("pu001", "p001", 1),
+    ("pu001",  "p002", 3),
+    ("pu003",  "p002",6 ),
+    ("pu003",  "p001",10 ),
+    ("pu002",  "p003", 4),
+    ("pu002",  "p002", 7);
