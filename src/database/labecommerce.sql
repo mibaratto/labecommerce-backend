@@ -126,3 +126,7 @@ INSERT INTO purchases_products (purchase_id, product_id, quantity)
     ("pu003",  "p001",10 ),
     ("pu002",  "p003", 4),
     ("pu002",  "p002", 7);
+
+SELECT * FROM purchases_products
+INNER JOIN products ON purchases_products.product_id = products.id
+INNER JOIN purchases ON purchases_products.purchase_id = purchases.id;
