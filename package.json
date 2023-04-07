@@ -1,8 +1,15 @@
 {
   "name": "labecommerce-backend",
   "version": "1.0.0",
-  "description": "\"e-commerce API\"",
+  "description": "e-commerce API",
   "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "labenu",
+    "ecommerce",
+    "typescript",
+    "node"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node ./build/index.js",
@@ -12,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/mibaratto/labecommerce-backend.git"
   },
-  "author": "\"Michelle-Lang_Baratto\"",
+  "author": "Michelle Lang Baratto",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/mibaratto/labecommerce-backend/issues"
