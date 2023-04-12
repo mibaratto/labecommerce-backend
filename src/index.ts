@@ -40,9 +40,53 @@ app.post("/users", (req: Request, res: Response) => {
 
     const newUser = createUser(id, email, password)
 
-    res.status(200)
+    res.status(201)
     res.send(newUser)
 })
+
+app.put("/users/:id", (req: Request, res: Response) => {
+    const id = req.params.id
+    const newPassword = req.body.password as string | undefined
+    const user = users.find((user) => user.id === id)
+
+    console.log("user found: ", user)
+    console.log("id: ", id)
+    console.log("new passwd: ", newPassword)
+
+    if(user) {
+        user.id = user.id
+        user.password = newPassword || user.password
+
+        console.log("user updated: ", user)
+        res.status(200).send("atualizado!")
+    } else {
+        res.status(400).send("nao encontrado!")
+    }
+    
+})
+
+app.delete("/users/:id", (req: Request, res: Response) => {
+    const id = req.params.id
+    const userId = users.findIndex((user) => user.id === id )
+    if (userId >=0) {
+        users.splice(userId, 1)
+        res.status(200).send("DEletado")   
+    } else {
+        res.status(400).send("nao encontrado!")
+    }
+})
+
+
+
+app.get("/users/:id", (req: Request, res: Response)=>{
+    const id = req.params.id
+    const result = users.find((user)=> user.id === id)
+    res.status(200).send(result)
+})
+
+
+
+
 
 // export function createUser(id:string, email:string, password:string):string {
 //     const newUser = {
