@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "description": "e-commerce API",
   "main": "index.js",
-  "type": "module",
   "keywords": [
     "labenu",
     "ecommerce",
     "typescript",
     "node"
-  ],
+  ],  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node ./build/index.js",
