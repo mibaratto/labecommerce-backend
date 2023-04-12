@@ -95,7 +95,6 @@ export function queryProductByName(query:string): TProduct[] | undefined {
 
     const protuctSearched = products.filter(product => query === ''|| product.name.toLowerCase().includes(query.toLowerCase()))
     return protuctSearched
-
 }
 
 

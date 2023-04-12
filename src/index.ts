@@ -1,6 +1,6 @@
 import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName } from "./database";
-import { PRODUCT_CATEGORIES } from "./types"
-import express, { Request, Response} from 'express'
+//import { PRODUCT_CATEGORIES } from "./types";
+import express, { Request, Response} from 'express';
 import cors from 'cors';
 
 
