@@ -3,17 +3,17 @@ import { TProduct, TPurchase, TUser, PRODUCT_CATEGORIES } from "./types";
  
  export const users: TUser[] = [
     {
-        id:"001",
+        id:"u001",
         email: "maria@gmail.com",
         password:"123ABC"
     },
     {
-        id:"002",
+        id:"u002",
         email:"rosa@gmail.com",
         password:"456DEF"
     },
     {
-        id:"003",
+        id:"u003",
         email:"joana@gmail.com",
         password:"789GHI"
     }
@@ -22,19 +22,19 @@ import { TProduct, TPurchase, TUser, PRODUCT_CATEGORIES } from "./types";
 
  export const products: TProduct[] = [
     {
-        id: "1001",
+        id: "p1001",
         name: "bolsa",
         price: 100.00,
         category: PRODUCT_CATEGORIES.ACCESSORIES
     },
     {
-        id: "1002",
+        id: "p1002",
         name: "aspirador-de-pó",
         price: 50.00,
         category: PRODUCT_CATEGORIES.ELECTRONICS
     },
     {
-        id: "1003",
+        id: "p1003",
         name: "camisa",
         price: 50.00,
         category: PRODUCT_CATEGORIES.CLOTHES_AND_SHOES
@@ -43,13 +43,13 @@ import { TProduct, TPurchase, TUser, PRODUCT_CATEGORIES } from "./types";
 
  export const purchases: TPurchase[] = [ 
     {
-        userId: "001",
-        productId: "1001",
+        userId: "c001",
+        productId: "c1001",
         quantity: 1,
         totalPrice: 100.00
     },
     {
-        userId: "003",
+        userId: "c003",
         productId: "1002",
         quantity: 3,
         totalPrice: 150.00
