@@ -15,33 +15,65 @@ app.get("/ping", (req: Request, res: Response) => {
     res.send("Pong!")
 })
 
+
 app.get("/users", (req: Request, res: Response) => {
-    res.status(200)
-    res.send(getAllUsers())
+    try {
+        res.status(200)
+        res.send(getAllUsers())
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }
 })
+
 
 app.get("/products", (req: Request, res: Response) => {
-    res.status(200)
-    res.send(getAllProducts())
+    try{
+        res.status(200)
+        res.send(getAllProducts())
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }
 })
+
 
 app.get("/product/search", (req: Request, res: Response) => {
-    const busca = req.query.q as string
-    //const {q} = req.query
-    res.status(200)
-    res.send(queryProductByName(busca))
+    try {
+        const busca = req.query.q as string
+        if(busca.length < 1) {
+            throw new Error (" O campo de busca esta vazio.")
+        }
+        res.status(200)
+        res.send(queryProductByName(busca))
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }  
 })
 
+
 app.post("/users", (req: Request, res: Response) => {
-    const {id, email, password} = req.body
-    if (typeof id !== "string") {
-        return res.status(400).send("id tem que ser string")
-    }
+    try{
+        const {id, email, password} = req.body
+        if (typeof id !== "string" || id.length < 1) {
+            throw new Error ("O id precisa ser mais de 1 caracter e ser string")
+        }
+        if (typeof email !== "string" || email.length < 4 || !email.includes("@") || !email.includes(".")) {
+            throw new Error ("O e-mail inválido.")
+        }
+        if (typeof password !== "string") {
+            throw new Error ("A senha  é inválida.")
+        }
 
-    const newUser = createUser(id, email, password)
+        const newUser = createUser(id, email, password)
+        res.status(201)
+        res.send(newUser)
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }     
 
-    res.status(201)
-    res.send(newUser)
 })
 
 app.put("/users/:id", (req: Request, res: Response) => {
@@ -123,3 +155,7 @@ app.delete("/products/:id", (req: Request, res: Response) => {
 })
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8b20210 (get all users, get all products and create user validations)
