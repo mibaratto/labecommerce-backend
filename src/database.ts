@@ -17,7 +17,6 @@ import { TProduct, TPurchase, TUser, PRODUCT_CATEGORIES } from "./types";
         email:"joana@gmail.com",
         password:"789GHI"
     }
-
  ]
 
  export const products: TProduct[] = [
@@ -70,14 +69,37 @@ export function getAllUsers():TUser[] {
     return users
 }
 
-export function createProduct(id:string, name:string, price:number, category:PRODUCT_CATEGORIES):string {
+export function getUserById(id:string): TUser | undefined {
+    return users.find((user)=> user.id === id)
+}
+
+export function getUserByEmail(email:string): TUser | undefined {
+    return users.find((user)=> user.email === email)
+}
+
+export function createProduct(id:string, name:string, price:number, category:PRODUCT_CATEGORIES):TProduct {
     const newProduct = {
     id,
     name,
     price,
     category
     }
-    return "Produto criado com sucesso!"
+    products.push(newProduct)
+    return newProduct
+}
+
+export function createPurchase(userId:string, productId:string, quantity: number, totalPrice: number):string {
+    const newPurchase = {
+        userId,
+        productId,
+        quantity,
+        totalPrice
+    }
+    return "Compra criada com sucesso!"
+}
+
+export function getPurchasesByUserId(userId:string): TPurchase[] {
+    return purchases.filter((purchase) => purchase.userId === userId)
 }
 
 export function getAllProducts():TProduct[] {
@@ -94,6 +116,3 @@ export function queryProductByName(query:string): TProduct[] | undefined {
     const protuctSearched = products.filter(product => query === ''|| product.name.toLowerCase().includes(query.toLowerCase()))
     return protuctSearched
 }
-
-
-// .filter(product => searchFilter === "" || product.name.toLowerCase().includes(searchFilter.toLowerCase()))
