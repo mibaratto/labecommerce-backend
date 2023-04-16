@@ -69,6 +69,10 @@ export function getAllUsers():TUser[] {
     return users
 }
 
+export function getUserById(id:string): TUser | undefined {
+    return users.find((user)=> user.id === id)
+}
+
 export function createProduct(id:string, name:string, price:number, category:PRODUCT_CATEGORIES):TProduct {
     const newProduct = {
     id,

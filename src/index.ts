@@ -1,7 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName } from "./database";
 =======
 import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase } from "./database";
+=======
+import { users, products, purchases, getAllUsers, getUserById, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase } from "./database";
+>>>>>>> eb9c6c5 (validate existing user)
 //import { PRODUCT_CATEGORIES } from "./types";
 >>>>>>> d892363 (create purchase, create product)
 import express, { Request, Response} from 'express';
@@ -61,6 +65,7 @@ app.get("/product/search", (req: Request, res: Response) => {
 app.post("/users", (req: Request, res: Response) => {
     try{
         const {id, email, password} = req.body
+
         if (typeof id !== "string" || id.length < 1) {
             throw new Error ("O id precisa ser mais de 1 caracter e ser string")
         }
@@ -70,6 +75,12 @@ app.post("/users", (req: Request, res: Response) => {
         if (typeof password !== "string") {
             throw new Error ("A senha  é inválida.")
         }
+
+        const userExists = getUserById(id)
+        if (userExists) {
+            throw new Error("O usuário já existe")
+        }
+
         const newUser = createUser(id, email, password)
         res.status(201)
         res.send(newUser)
@@ -172,7 +183,7 @@ app.get("/products/:id", (req: Request, res: Response)=>{
 
 app.get("/users/:id", (req: Request, res: Response)=>{
     const id = req.params.id
-    const result = users.find((user)=> user.id === id)
+    const result = getUserById(id)
     res.status(200).send(result)
 })
 
