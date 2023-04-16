@@ -2,7 +2,7 @@ import { users, products, getAllUsers, createUser, createProduct, getAllProducts
 import { PRODUCT_CATEGORIES, TPurchase } from "./types";
 import express, { Request, Response} from 'express';
 import cors from 'cors';
-
+import { db } from "./database/knex";
 
 const app = express()
 app.use(express.json())
@@ -16,10 +16,13 @@ app.get("/ping", (req: Request, res: Response) => {
 })
 
 
-app.get("/users", (req: Request, res: Response) => {
+app.get("/users", async (req: Request, res: Response) => {
     try {
         res.status(200)
-        res.send(getAllUsers())
+        const result = await db.raw(`
+	        SELECT * FROM users;
+        `)
+        res.send(result)
     } catch (error: any) {
         console.log(error)
         res.status(400).send(error.message)
@@ -27,10 +30,13 @@ app.get("/users", (req: Request, res: Response) => {
 })
 
 
-app.get("/products", (req: Request, res: Response) => {
+app.get("/products", async (req: Request, res: Response) => {
     try{
         res.status(200)
-        res.send(getAllProducts())
+        const result = await db.raw(`
+	        SELECT * FROM products;
+        `)
+        res.send(result)
     } catch (error: any) {
         console.log(error)
         res.status(400).send(error.message)
@@ -38,14 +44,22 @@ app.get("/products", (req: Request, res: Response) => {
 })
 
 
-app.get("/product/search", (req: Request, res: Response) => {
+app.get("/product/search", async (req: Request, res: Response) => {
     try {
         const busca = req.query.q as string
         if(busca.length < 1) {
             throw new Error (" O campo de busca esta vazio.")
         }
+
+        console.log(busca)
+
+        const result = await db.raw(`
+            SELECT * FROM products 
+            WHERE name = "${busca}";
+        `)
+
         res.status(200)
-        res.send(queryProductByName(busca))
+        res.send(result)
     } catch(error: any) {
         console.log(error)
         res.status(400).send(error.message)

@@ -39,8 +39,8 @@ CREATE TABLE products (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name TEXT NOT NULL,
     price REAL NOT NULL,
-    description TEXT DEFAULT NULL,
-    image_url TEXT DEFAULT
+    description TEXT,
+    image_url TEXT
 );
 
 INSERT INTO products (id, name, price, description)
@@ -69,6 +69,9 @@ SELECT * FROM products
 SELECT * FROM products   
     WHERE price >= 100 AND price <= 300
     ORDER BY price ASC;
+
+SELECT * FROM products 
+    WHERE name = "tv";
 
 ----------------
 SELECT * FROM products;
