@@ -6,7 +6,7 @@ CREATE TABLE users (
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    created_at  TEXT
+    created_at TEXT NOT NULL
 );
 
 INSERT INTO users (id, name, email, password, created_at)
@@ -39,8 +39,8 @@ CREATE TABLE products (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name TEXT NOT NULL,
     price REAL NOT NULL,
-    description TEXT,
-    image_url TEXT
+    description TEXT NOT NULL,
+    image_url TEXT NOT NULL
 );
 
 INSERT INTO products (id, name, price, description)
@@ -86,6 +86,7 @@ CREATE TABLE purchases (
     total_price REAL NOT NULL,
     paid INTEGER NOT NULL DEFAULT 0,
     buyer_id TEXT NOT NULL,
+    created_at TEXT NOT NULL,
     FOREIGN KEY (buyer_id) REFERENCES users(id)
 );
 
