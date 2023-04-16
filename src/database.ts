@@ -43,14 +43,14 @@ import { TProduct, TPurchase, TUser, PRODUCT_CATEGORIES } from "./types";
 
  export const purchases: TPurchase[] = [ 
     {
-        userId: "c001",
-        productId: "c1001",
+        userId: "u001",
+        productId: "p1001",
         quantity: 1,
         totalPrice: 100.00
     },
     {
-        userId: "c003",
-        productId: "1002",
+        userId: "u003",
+        productId: "p1002",
         quantity: 3,
         totalPrice: 150.00
     }
@@ -84,10 +84,8 @@ export function getAllProducts():TProduct[] {
     return products
 }
 
-
 export function getProductById(idToSearch:string): TProduct | undefined {
     const productSelected = products.find((product) => product.id === idToSearch)
-
     return productSelected
 }
 

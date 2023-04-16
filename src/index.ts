@@ -1,7 +1,7 @@
 import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName } from "./database";
-//import { PRODUCT_CATEGORIES } from "./types";
 import express, { Request, Response} from 'express';
 import cors from 'cors';
+import { PRODUCT_CATEGORIES } from "./types";
 
 
 const app = express()
@@ -47,36 +47,46 @@ app.post("/users", (req: Request, res: Response) => {
 app.put("/users/:id", (req: Request, res: Response) => {
     const id = req.params.id
     const newPassword = req.body.password as string | undefined
+    const newEmail = req.body.email as string | undefined
     const user = users.find((user) => user.id === id)
-
-    console.log("user found: ", user)
-    console.log("id: ", id)
-    console.log("new passwd: ", newPassword)
 
     if(user) {
         user.id = user.id
         user.password = newPassword || user.password
+        user.email = newEmail || user.email
 
         console.log("user updated: ", user)
         res.status(200).send("atualizado!")
     } else {
         res.status(400).send("nao encontrado!")
     }
-    
 })
 
-app.delete("/users/:id", (req: Request, res: Response) => {
+app.put("/products/:id", (req: Request, res: Response) => {
     const id = req.params.id
-    const userId = users.findIndex((user) => user.id === id )
-    if (userId >=0) {
-        users.splice(userId, 1)
-        res.status(200).send("DEletado")   
+
+    const newName = req.body.name as string | undefined
+    const newPrice = req.body.price as number | undefined
+    const newCategory = req.body.category as PRODUCT_CATEGORIES | undefined
+    
+    const product = products.find((product) => product.id === id)
+
+    if(product) {
+        product.id = product.id
+        product.name = newName || product.name
+        product.price = newPrice || product.price
+        product.category = newCategory || product.category
+        res.status(200).send("atualizado!")
     } else {
         res.status(400).send("nao encontrado!")
-    }
+    }  
 })
 
-
+app.get("/products/:id", (req: Request, res: Response)=>{
+    const id = req.params.id
+    const result = getProductById(id)
+    res.status(200).send(result)
+})
 
 app.get("/users/:id", (req: Request, res: Response)=>{
     const id = req.params.id
@@ -84,33 +94,32 @@ app.get("/users/:id", (req: Request, res: Response)=>{
     res.status(200).send(result)
 })
 
+app.get("/purchases/:userId", (req: Request, res: Response) =>{
+    const id = req.params.userId
+    const result = purchases.find((purchase) => purchase.userId === id)
+    res.status(200).send(result)
+})
 
+app.delete("/users/:id", (req: Request, res: Response) => {
+    const id = req.params.id
+    const userId = users.findIndex((user) => user.id === id )
+    if (userId >=0) {
+        users.splice(userId, 1)
+        res.status(200).send("Deletado")   
+    } else {
+        res.status(400).send("nao encontrado!")
+    }
+})
 
+app.delete("/products/:id", (req: Request, res: Response) => {
+    const id = req.params.id
+    const productId = products.findIndex((product) => product.id === id)
+    if(productId >=0) {
+        products.splice(productId, 1)
+        res.status(200).send("Deletado")
+    } else {
+        res.status(400).send("nao encontrado!")
+    }
+})
 
-
-// export function createUser(id:string, email:string, password:string):string {
-//     const newUser = {
-//        id,
-//        email,
-//        password,
-//     }
-//    users.push(newUser)
-//    return "Usuário cadastrado com sucesso!"
-// }
-
-
-// console.log("Usuarios", users, "Produtos", products, "Compras", purchases)
-
-
-// console.log(createUser("004", "beltrano@email.com", "beltrano99"))
-
-// console.log(getAllUsers())
-
-// console.log(createProduct("p004", "Monitor HD", 800, PRODUCT_CATEGORIES.ELECTRONICS))
-
-// console.log(getAllProducts())
-
-// console.log("Produto por ID", getProductById("1002"))
-
-// console.log("Produto por Nome",queryProductByName("bolsa"))
 
