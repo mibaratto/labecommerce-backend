@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName } from "./database";
 =======
 import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase } from "./database";
@@ -8,6 +9,10 @@ import { users, products, purchases, getAllUsers, getUserById, createUser, creat
 >>>>>>> eb9c6c5 (validate existing user)
 //import { PRODUCT_CATEGORIES } from "./types";
 >>>>>>> d892363 (create purchase, create product)
+=======
+import { users, products, purchases, getAllUsers, getUserById, getUserByEmail, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase } from "./database";
+import { PRODUCT_CATEGORIES } from "./types";
+>>>>>>> 38e1ee1 (finish exercise 1)
 import express, { Request, Response} from 'express';
 import cors from 'cors';
 import { PRODUCT_CATEGORIES } from "./types";
@@ -64,7 +69,9 @@ app.get("/product/search", (req: Request, res: Response) => {
 
 app.post("/users", (req: Request, res: Response) => {
     try{
-        const {id, email, password} = req.body
+        const id = req.body.id as string | undefined
+        const email = req.body.email as string | undefined
+        const password = req.body.password as string | undefined
 
         if (typeof id !== "string" || id.length < 1) {
             throw new Error ("O id precisa ser mais de 1 caracter e ser string")
@@ -78,7 +85,12 @@ app.post("/users", (req: Request, res: Response) => {
 
         const userExists = getUserById(id)
         if (userExists) {
-            throw new Error("O usuário já existe")
+            throw new Error("O usuário já existe com este id")
+        }
+
+        const emailExists = getUserByEmail(email)
+        if (emailExists) {
+            throw new Error("O usuário já existe com este email")
         }
 
         const newUser = createUser(id, email, password)
@@ -89,9 +101,14 @@ app.post("/users", (req: Request, res: Response) => {
         res.status(400).send(error.message)
     }   
 })
-app.post("/products"), (req: Request, res: Response) => {
-    try{
-        const {id, name, price, category} = req.body
+
+app.post("/products", (req: Request, res: Response) => {
+    try {
+        const id = req.body.id as string | undefined
+        const name = req.body.name as string | undefined
+        const price = req.body.price as number | undefined
+        const category = req.body.category as PRODUCT_CATEGORIES | undefined
+
         if (typeof id !== "string" || id.length < 1) {
             throw new Error ("O id precisa ser mais de 1 caracter e ser string")
         }
@@ -101,16 +118,28 @@ app.post("/products"), (req: Request, res: Response) => {
         if (typeof price !== "number" || price < 0) {
             throw new Error ("O preço precisa ter valor maior que R$: 0,00")
         }
-        const newProduct = createProduct(id, name, price, category)
+        if (category !== PRODUCT_CATEGORIES.ACCESSORIES &&
+            category !== PRODUCT_CATEGORIES.CLOTHES_AND_SHOES &&
+            category !== PRODUCT_CATEGORIES.ELECTRONICS) {
+                
+                throw new Error ("Categoria inválida")
+        }
+
+        const productExists = getProductById(id)
+        if(productExists) {
+            throw new Error("O produto já existe com este id")
+        }
+
+        const newProduct = createProduct(id, name, price, PRODUCT_CATEGORIES.ACCESSORIES)
         res.status(201)
         res.send(newProduct)
     } catch(error: any) {
         console.log(error)
         res.status(400).send(error.message)
     }   
-}
+})
 
-app.post("/purchase"), (req: Request, res: Response) => {
+app.post("/purchase", (req: Request, res: Response) => {
     try{
         const {userId, productId, quantity, totalPrice} = req.body
         if (typeof userId !== "string" || userId.length < 1) {
@@ -119,6 +148,10 @@ app.post("/purchase"), (req: Request, res: Response) => {
         if (typeof productId !== "string" || productId.length < 1) {
             throw new Error ("O id precisa ser mais de 1 caracter e ser string")
         }
+        if (typeof quantity !== "number" || quantity < 1 || !Number.isInteger(quantity)) {
+            throw new Error ("A quantidade precisa ser um número inteiro maior do que 0")
+        }
+        
         const newPurchase = createPurchase(userId, productId, quantity, totalPrice)
         res.status(201)
         res.send(newPurchase)
@@ -127,7 +160,7 @@ app.post("/purchase"), (req: Request, res: Response) => {
         console.log(error)
         res.status(400).send(error.message)
     }   
-}
+})
 
 app.put("/users/:id", (req: Request, res: Response) => {
     const id = req.params.id

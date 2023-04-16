@@ -73,6 +73,10 @@ export function getUserById(id:string): TUser | undefined {
     return users.find((user)=> user.id === id)
 }
 
+export function getUserByEmail(email:string): TUser | undefined {
+    return users.find((user)=> user.email === email)
+}
+
 export function createProduct(id:string, name:string, price:number, category:PRODUCT_CATEGORIES):TProduct {
     const newProduct = {
     id,
