@@ -88,7 +88,7 @@ export function createProduct(id:string, name:string, price:number, category:PRO
     return newProduct
 }
 
-export function createPurchase( userId:string, productId:string, quantity: number, totalPrice: number):string {
+export function createPurchase(userId:string, productId:string, quantity: number, totalPrice: number):string {
     const newPurchase = {
         userId,
         productId,
@@ -96,6 +96,10 @@ export function createPurchase( userId:string, productId:string, quantity: numbe
         totalPrice
     }
     return "Compra criada com sucesso!"
+}
+
+export function getPurchasesByUserId(userId:string): TPurchase[] {
+    return purchases.filter((purchase) => purchase.userId === userId)
 }
 
 export function getAllProducts():TProduct[] {
@@ -112,6 +116,3 @@ export function queryProductByName(query:string): TProduct[] | undefined {
     const protuctSearched = products.filter(product => query === ''|| product.name.toLowerCase().includes(query.toLowerCase()))
     return protuctSearched
 }
-
-
-// .filter(product => searchFilter === "" || product.name.toLowerCase().includes(searchFilter.toLowerCase()))

@@ -1,21 +1,7 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName } from "./database";
-=======
-import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase } from "./database";
-=======
-import { users, products, purchases, getAllUsers, getUserById, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase } from "./database";
->>>>>>> eb9c6c5 (validate existing user)
-//import { PRODUCT_CATEGORIES } from "./types";
->>>>>>> d892363 (create purchase, create product)
-=======
-import { users, products, purchases, getAllUsers, getUserById, getUserByEmail, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase } from "./database";
-import { PRODUCT_CATEGORIES } from "./types";
->>>>>>> 38e1ee1 (finish exercise 1)
+import { users, products, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase, getPurchasesByUserId, getUserByEmail, getUserById } from "./database";
+import { PRODUCT_CATEGORIES, TPurchase } from "./types";
 import express, { Request, Response} from 'express';
 import cors from 'cors';
-import { PRODUCT_CATEGORIES } from "./types";
 
 
 const app = express()
@@ -63,7 +49,7 @@ app.get("/product/search", (req: Request, res: Response) => {
     } catch(error: any) {
         console.log(error)
         res.status(400).send(error.message)
-    }  
+    }
 })
 
 
@@ -99,7 +85,7 @@ app.post("/users", (req: Request, res: Response) => {
     } catch(error: any) {
         console.log(error)
         res.status(400).send(error.message)
-    }   
+    }
 })
 
 app.post("/products", (req: Request, res: Response) => {
@@ -121,7 +107,7 @@ app.post("/products", (req: Request, res: Response) => {
         if (category !== PRODUCT_CATEGORIES.ACCESSORIES &&
             category !== PRODUCT_CATEGORIES.CLOTHES_AND_SHOES &&
             category !== PRODUCT_CATEGORIES.ELECTRONICS) {
-                
+
                 throw new Error ("Categoria inválida")
         }
 
@@ -136,7 +122,7 @@ app.post("/products", (req: Request, res: Response) => {
     } catch(error: any) {
         console.log(error)
         res.status(400).send(error.message)
-    }   
+    }
 })
 
 app.post("/purchase", (req: Request, res: Response) => {
@@ -151,7 +137,7 @@ app.post("/purchase", (req: Request, res: Response) => {
         if (typeof quantity !== "number" || quantity < 1 || !Number.isInteger(quantity)) {
             throw new Error ("A quantidade precisa ser um número inteiro maior do que 0")
         }
-        
+
         const newPurchase = createPurchase(userId, productId, quantity, totalPrice)
         res.status(201)
         res.send(newPurchase)
@@ -159,59 +145,56 @@ app.post("/purchase", (req: Request, res: Response) => {
     } catch(error: any) {
         console.log(error)
         res.status(400).send(error.message)
-    }   
+    }
 })
 
 app.put("/users/:id", (req: Request, res: Response) => {
-    const id = req.params.id
-    const newPassword = req.body.password as string | undefined
-    const newEmail = req.body.email as string | undefined
-    const user = users.find((user) => user.id === id)
+    try {
+        const id = req.params.id
+        const newEmail = req.body.email as string | undefined
+        const newPassword = req.body.password as string | undefined
 
-    if(user) {
+        if (typeof id !== "string" || id.length < 1) {
+            throw new Error ("O id precisa ser mais de 1 caracter e ser string")
+        }
+        if (typeof newEmail !== "string" || newEmail.length < 1) {
+            throw new Error ("O email precisa ter mais de 1 caracter")
+        }
+        if (typeof newPassword !== "string" || newPassword.length < 1) {
+            throw new Error ("O password precisa ter mais de 1 caracter")
+        }
+
+        
+        const user = getUserById(id)
+        if(!user) {
+            throw new Error("não encontrado")
+        }
+
         user.id = user.id
         user.password = newPassword || user.password
         user.email = newEmail || user.email
 
-        console.log("user updated: ", user)
         res.status(200).send("atualizado!")
-    } else {
-        res.status(400).send("nao encontrado!")
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
     }
 })
 
-<<<<<<< HEAD
-app.put("/products/:id", (req: Request, res: Response) => {
-=======
-
-
-
-
 app.delete("/users/:id", (req: Request, res: Response) => {
->>>>>>> d892363 (create purchase, create product)
-    const id = req.params.id
-
-    const newName = req.body.name as string | undefined
-    const newPrice = req.body.price as number | undefined
-    const newCategory = req.body.category as PRODUCT_CATEGORIES | undefined
-    
-    const product = products.find((product) => product.id === id)
-
-    if(product) {
-        product.id = product.id
-        product.name = newName || product.name
-        product.price = newPrice || product.price
-        product.category = newCategory || product.category
-        res.status(200).send("atualizado!")
-    } else {
-        res.status(400).send("nao encontrado!")
-    }  
-})
-
-app.get("/products/:id", (req: Request, res: Response)=>{
-    const id = req.params.id
-    const result = getProductById(id)
-    res.status(200).send(result)
+    try {
+        const id = req.params.id
+        const userIndex = users.findIndex((user) => user.id === id )
+        if (userIndex > 0) {
+            users.splice(userIndex, 1)
+            res.status(200).send("DEletado")   
+        } else {
+            throw new Error("nao encontrado!")
+        }
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }
 })
 
 app.get("/users/:id", (req: Request, res: Response)=>{
@@ -220,36 +203,93 @@ app.get("/users/:id", (req: Request, res: Response)=>{
     res.status(200).send(result)
 })
 
-app.get("/purchases/:userId", (req: Request, res: Response) =>{
-    const id = req.params.userId
-    const result = purchases.find((purchase) => purchase.userId === id)
-    res.status(200).send(result)
+app.get("/products/:id", (req: Request, res: Response)=> {
+    try {
+        
+        const id = req.params.id
+        console.log("id", id)
+
+        const product = getProductById(id)
+        if (!product) {
+            throw new Error("produto não encontrado")
+        }
+
+        res.status(200).send(product)
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }
 })
 
-app.delete("/users/:id", (req: Request, res: Response) => {
-    const id = req.params.id
-    const userId = users.findIndex((user) => user.id === id )
-    if (userId >=0) {
-        users.splice(userId, 1)
-        res.status(200).send("Deletado")   
-    } else {
-        res.status(400).send("nao encontrado!")
+app.put("/products/:id", (req: Request, res: Response) => {
+    try {
+        const id = req.body.id as string | undefined
+        const name = req.body.name as string | undefined
+        const price = req.body.price as number | undefined
+        const category = req.body.category as PRODUCT_CATEGORIES | undefined
+
+        if (typeof id !== "string" || id.length < 1) {
+            throw new Error ("O id precisa ser mais de 1 caracter e ser string")
+        }
+        if (typeof name !== "string" || name.length < 1) {
+            throw new Error ("O nome precisa ser mais de 1 caracter e ser string")
+        }
+        if (typeof price !== "number" || price <= 0) {
+            throw new Error ("O preço precisa ter valor maior que R$: 0,00")
+        }
+        if (category !== PRODUCT_CATEGORIES.ACCESSORIES &&
+            category !== PRODUCT_CATEGORIES.CLOTHES_AND_SHOES &&
+            category !== PRODUCT_CATEGORIES.ELECTRONICS) {
+
+                throw new Error ("Categoria inválida")
+        }
+
+        const product = getProductById(id)
+        if(!product) {
+            throw new Error("não encontrado")
+        }
+
+        product.id = id
+        product.name = name || product.name
+        product.category = category || product.category
+        product.price = price || product.price
+
+        res.status(200).send("atualizado!")
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
     }
 })
 
 app.delete("/products/:id", (req: Request, res: Response) => {
-    const id = req.params.id
-    const productId = products.findIndex((product) => product.id === id)
-    if(productId >=0) {
-        products.splice(productId, 1)
-        res.status(200).send("Deletado")
-    } else {
-        res.status(400).send("nao encontrado!")
+    try {
+        const id = req.params.id
+        const productIndex = products.findIndex((product) => product.id === id )
+        if (productIndex > 0) {
+            products.splice(productIndex, 1)
+            res.status(200).send("DEletado")
+        } else {
+            throw new Error("nao encontrado!")
+        }
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
     }
 })
 
+app.get("/purchase/:userId", (req: Request, res: Response)=> {
+    try {
+        const userId = req.params.userId
 
-<<<<<<< HEAD
-=======
+        if (!getUserById(userId)) {
+            throw new Error("usuário não existe")
+        }
 
->>>>>>> 8b20210 (get all users, get all products and create user validations)
+        const purchases: TPurchase[] = getPurchasesByUserId(userId)
+        res.status(200).send(purchases)
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }
+})
+
