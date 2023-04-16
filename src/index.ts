@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName } from "./database";
+=======
+import { users, products, purchases, getAllUsers, createUser, createProduct, getAllProducts, getProductById, queryProductByName, createPurchase } from "./database";
+//import { PRODUCT_CATEGORIES } from "./types";
+>>>>>>> d892363 (create purchase, create product)
 import express, { Request, Response} from 'express';
 import cors from 'cors';
 import { PRODUCT_CATEGORIES } from "./types";
@@ -65,16 +70,53 @@ app.post("/users", (req: Request, res: Response) => {
         if (typeof password !== "string") {
             throw new Error ("A senha  é inválida.")
         }
-
         const newUser = createUser(id, email, password)
         res.status(201)
         res.send(newUser)
     } catch(error: any) {
         console.log(error)
         res.status(400).send(error.message)
-    }     
-
+    }   
 })
+app.post("/products"), (req: Request, res: Response) => {
+    try{
+        const {id, name, price, category} = req.body
+        if (typeof id !== "string" || id.length < 1) {
+            throw new Error ("O id precisa ser mais de 1 caracter e ser string")
+        }
+        if (typeof name !== "string" || name.length < 1) {
+            throw new Error ("O nome precisa ser mais de 1 caracter e ser string")
+        }
+        if (typeof price !== "number" || price < 0) {
+            throw new Error ("O preço precisa ter valor maior que R$: 0,00")
+        }
+        const newProduct = createProduct(id, name, price, category)
+        res.status(201)
+        res.send(newProduct)
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }   
+}
+
+app.post("/purchase"), (req: Request, res: Response) => {
+    try{
+        const {userId, productId, quantity, totalPrice} = req.body
+        if (typeof userId !== "string" || userId.length < 1) {
+            throw new Error ("O id precisa ser mais de 1 caracter e ser string")
+        }
+        if (typeof productId !== "string" || productId.length < 1) {
+            throw new Error ("O id precisa ser mais de 1 caracter e ser string")
+        }
+        const newPurchase = createPurchase(userId, productId, quantity, totalPrice)
+        res.status(201)
+        res.send(newPurchase)
+
+    } catch(error: any) {
+        console.log(error)
+        res.status(400).send(error.message)
+    }   
+}
 
 app.put("/users/:id", (req: Request, res: Response) => {
     const id = req.params.id
@@ -94,7 +136,15 @@ app.put("/users/:id", (req: Request, res: Response) => {
     }
 })
 
+<<<<<<< HEAD
 app.put("/products/:id", (req: Request, res: Response) => {
+=======
+
+
+
+
+app.delete("/users/:id", (req: Request, res: Response) => {
+>>>>>>> d892363 (create purchase, create product)
     const id = req.params.id
 
     const newName = req.body.name as string | undefined
